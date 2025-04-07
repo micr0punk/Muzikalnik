@@ -1,0 +1,33 @@
+{% extends "base_unite.html" %}
+
+{% block content %}
+<h2 class="mb-3">Каталог</h2>
+<form method="GET" action="{{ url_for('search') }}" class="row g-2 mb-4">
+    <div class="col-md-6">
+        {{ form.query(class_='form-control', placeholder="Поиск по названию, исполнителю...") }}
+    </div>
+    <div class="col-md-3">
+        {{ form.genre(class_='form-select') }}
+    </div>
+    <div class="col-md-3">
+        <button type="submit" class="btn btn-success w-100">Найти</button>
+    </div>
+</form>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for album in albums %}
+    <div class="col">
+        <div class="card h-100">
+            <img src="{{ album.cover_url }}" class="card-img-top" alt="Обложка альбома">
+            <div class="card-body">
+                <h5 class="card-title">{{ album.title }}</h5>
+                <p class="card-text">Исполнитель: {{ album.artist }}<br>Жанр: {{ album.genre }}</p>
+                <a href="{{ url_for('album_detail', album_id=album.id) }}"
+                   class="btn btn-outline-secondary">Подробнее</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
