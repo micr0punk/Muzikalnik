@@ -10,7 +10,10 @@ class Track(SqlAlchemyBase, UserMixin, SerializerMixin):
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True, autoincrement=True)
-    name = sqlalchemy.Column(sqlalchemy.String, unique=True, nullable=False)
+    name = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    artist = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    genre = sqlalchemy.Column(sqlalchemy.String, nullable=False)
+    cover_url = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     length = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     release_date = sqlalchemy.Column(sqlalchemy.DateTime, nullable=False)
 

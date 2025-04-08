@@ -1,10 +1,15 @@
 import os
+from datetime import datetime
 
-from flask import Flask, render_template, flash, redirect, url_for
-from flask_login import login_user, LoginManager
+from flask import Flask, render_template, flash, redirect, url_for, make_response, jsonify
+from flask_login import login_user, LoginManager, login_required, logout_user
+from flask_restful import Api
+from requests import post
+from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
 
-from data import db_session
+import user_resources
+from data import db_session, user_api
 from data.users import User
 from forms.index_form import SearchForm
 from forms.login_form import LoginForm
@@ -13,6 +18,14 @@ from forms.upload_album_form import UploadAlbumForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+
+api = Api(app)
+
+# для списка объектов
+api.add_resource(user_resources.UsersListResource, '/api/v2/users')
+
+# для одного объекта
+api.add_resource(user_resources.UsersResource, '/api/v2/users/<int:user_id>')
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -28,7 +41,7 @@ app.config['cover_folder'] = cover_folder
 @login_manager.user_loader
 def load_user(user_id):
     db_sess = db_session.create_session()
-    return db_sess.query(User).get(user_id)
+    return db_sess.get(User, user_id)
 
 
 @app.route("/")
@@ -37,18 +50,19 @@ def index():
 
     albums = [
         {
-            'title': 'Test Album',
+            'id': 1,
+            'name': 'Тестовое название',
             'artist': 'Unknown Artist',
-            'genre': 'Rock',
-            'cover_url': '/static/test_cover.jpg',
-            'id': 1
+            'genre': 'Рок',
+            'cover_url': '/static/covers/no_cover.png',
+            'length': '48:20'
         }
     ]
 
-    return render_template("index.html", form=form, albums=albums)
+    return render_template("index.html", title='Музыкальник', form=form, albums=albums)
 
 
-@app.route("/login")
+@app.route("/login", methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -63,11 +77,21 @@ def login():
     return render_template('login.html', title='Авторизация', form=form)
 
 
-@app.route('/register')
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
-        return "<h3>Вы зарегистрированы! (заглушка)</h3>"
+        response = post('http://localhost:5000/api/user',
+                        json={'name': form.username.data,
+                              'about': form.about.data,
+                              'email': form.email.data,
+                              'hashed_password': generate_password_hash(form.password.data),
+                              'created_date': datetime.now().isoformat()})
+        if response.status_code == 201:
+            return redirect(url_for('login'))
+        else:
+            flash("Ошибка при регистрации. Повторите попытку.", "danger")
+
     return render_template('register.html', title='Регистрация', form=form)
 
 
@@ -89,12 +113,34 @@ def upload():
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-        # Здесь можешь сохранить данные альбома в базу
         flash("Альбом успешно загружен!", "success")
         return redirect(url_for('index'))
 
     return render_template("upload.html", form=form)
 
 
-if __name__ == '__main__':
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found'}), 404)
+
+
+@app.errorhandler(400)
+def bad_request(_):
+    return make_response(jsonify({'error': 'Bad Request'}), 400)
+
+
+def main_api():
+    db_session.global_init("db/global.db")
+    app.register_blueprint(user_api.blueprint)
     app.run(port=8080, host='127.0.0.1')
+
+
+if __name__ == '__main__':
+    main_api()

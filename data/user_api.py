@@ -1,6 +1,5 @@
 import flask
-
-from flask import Flask, request, make_response, jsonify
+from flask import request, make_response, jsonify
 
 from . import db_session
 from .users import User
@@ -31,20 +30,23 @@ def create_user():
     if not request.json:
         return make_response(jsonify({'error': 'Empty request'}), 400)
     elif not all(key in request.json for key in
-                 ['id', 'name', 'about', 'email', 'hashed_password', 'created_date']):
+                 ['name', 'about', 'email', 'hashed_password', 'created_date']):
         return make_response(jsonify({'error': 'Bad request'}), 400)
+
     db_sess = db_session.create_session()
+
     user = User(
-        id=request.json['id'],
         name=request.json['name'],
         about=request.json['about'],
         email=request.json['email'],
-        hashed_password = request.json['hashed_password'],
-        created_date = request.json['created_date']
+        hashed_password=request.json['hashed_password'],
+        created_date=request.json['created_date']
     )
+
     db_sess.add(user)
     db_sess.commit()
-    return jsonify({'id': user.id})
+
+    return jsonify({'id': user.id}), 201
 
 
 @blueprint.route('/api/user/<int:user_id>', methods=['DELETE'])
