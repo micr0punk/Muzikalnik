@@ -1,18 +1,20 @@
-<h2>Название альбома</h2>
-<p>Исполнитель: Artist Name</p>
-<p>Год: 2024</p>
-<p>Жанр: Альтернатива</p>
-<ul>
-  <li>Трек 1 - <a href="/track/1">Слушать</a></li>
-  <li>Трек 2 - <a href="/track/2">Слушать</a></li>
-</ul>
+{% extends "base_unite.html" %}
 
-<div class="user-actions">
-  <button>❤️ Нравится</button>
-  <form method="post" action="/rate">
-    <label>Оценка (от 1 до 90):</label>
-    <input type="number" name="score" min="1" max="90">
-    <button type="submit">Оценить</button>
-  </form>
-  <a href="/download/album123.zip">⬇️ Скачать</a>
+{% block content %}
+
+<div class="row">
+    <div class="col-md-4">
+        <img src="{{ album.cover_url }}" alt="Обложка" class="img-fluid rounded shadow">
+    </div>
+    <div class="col-md-8">
+        <h1 class="lh-lg"><strong>Альбом:</strong> {{ album.name }}</h1>
+        <p><strong>Исполнитель:</strong> {{ album.artist }}</p>
+        <p><strong>Жанр:</strong> {{ album.genre }}</p>
+        <p><strong>Длительность:</strong> {{ album.length }}</p>
+        <p><strong>Дата выхода:</strong> {{ album.release_date.strftime('%d.%m.%Y') }}</p>
+        {% if current_user.is_authenticated %}
+        <a href="#" class="btn btn-success">Скачать</a>
+        {% endif %}
+    </div>
 </div>
+{% endblock %}

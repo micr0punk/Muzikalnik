@@ -2,12 +2,13 @@ import datetime
 
 import sqlalchemy
 from flask_login import UserMixin
+from sqlalchemy import orm
 from sqlalchemy_serializer import SerializerMixin
 
 from .db_session import SqlAlchemyBase
 
 
-class Track(SqlAlchemyBase, UserMixin, SerializerMixin):
+class Album(SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'albums'
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
@@ -18,6 +19,9 @@ class Track(SqlAlchemyBase, UserMixin, SerializerMixin):
     cover_url = sqlalchemy.Column(sqlalchemy.String, nullable=False, default='/static/covers/no_cover.png')
     length = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     release_date = sqlalchemy.Column(sqlalchemy.DateTime, nullable=False, default=datetime.date.today())
+    uploaded_from_user_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id"))
+    user = orm.relationship('User')
+    tracks = orm.relationship("Track", back_populates="album")
 
     def __repr__(self):
         return f'<Album> {self.id} {self.name} {self.email}'

@@ -1,0 +1,24 @@
+{% extends "base_unite.html" %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-4">
+        {% if track.album_id == 0 %}
+        <img src="{{ track.cover_url }}" alt="Обложка" class="img-fluid rounded shadow">
+        {% else %}
+        <img src="{{ album.cover_url }}" alt="Обложка" class="img-fluid rounded shadow">
+        {% endif %}
+    </div>
+    <div class="col-md-8">
+        <h1 class="lh-lg"><strong>Трек:</strong> {{ track.name }}</h1>
+        <p><strong>Исполнитель:</strong> {{ track.artist }}</p>
+        <p><strong>Жанр:</strong> {{ track.genre }}</p>
+        <p><strong>Длительность:</strong> {{ track.length }}</p>
+        <p><strong>Дата выхода:</strong> {{ track.release_date.strftime('%d.%m.%Y') }}</p>
+        {% if current_user.is_authenticated %}
+        <a href="#" class="btn btn-success">Скачать</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

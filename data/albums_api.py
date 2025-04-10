@@ -4,30 +4,29 @@ import flask
 from flask import request, make_response, jsonify
 
 from . import db_session
-from .users import User
+from .albums import Album
 
 blueprint = flask.Blueprint(
-    'user_api',
+    'albums_api',
     __name__,
     template_folder='templates'
 )
 
 
-@blueprint.route('/api/user/<int:user_id>', methods=['GET'])
-def get_one_user(user_id):
+@blueprint.route('/api/albums/<int:album_id>', methods=['GET'])
+def get_one_user(album_id):
     db_sess = db_session.create_session()
-    user = db_sess.query(User).get(user_id)
-    if not user:
+    album = db_sess.query(Album).get(album_id)
+    if not album:
         return make_response(jsonify({'error': 'Not found'}), 404)
     return jsonify(
         {
-            'user': user.to_dict(only=(
-                'id', 'name', 'about', 'email', 'hashed_password', 'created_date'))
+            'album': album.to_dict()
         }
     )
 
 
-@blueprint.route('/api/user', methods=['POST'])
+@blueprint.route('/api/albums', methods=['POST'])
 def create_user():
     if not request.json:
         return make_response(jsonify({'error': 'Empty request'}), 400)
