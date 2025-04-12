@@ -1,11 +1,8 @@
-import os
-
 import requests
 from flask import Flask, render_template, flash, redirect, url_for, make_response, jsonify
-from flask_login import login_user, LoginManager, login_required, logout_user
+from flask_login import login_user, LoginManager, login_required, logout_user, current_user
 from flask_restful import Api
 from werkzeug.security import generate_password_hash
-from werkzeug.utils import secure_filename
 
 import user_resources
 from data import db_session, user_api
@@ -15,7 +12,7 @@ from data.users import User
 from forms.index_form import SearchForm
 from forms.login_form import LoginForm
 from forms.register_form import RegisterForm
-from forms.upload_album_form import UploadAlbumForm
+from forms.upload_form import UploadAlbumForm, UploadTrackForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -51,7 +48,7 @@ def index():
     albums = db_sess.query(Album).all()
     tracks = db_sess.query(Track).all()
 
-    return render_template("index.html", title='Главная страница – Муызкальник', form=form, albums=albums,
+    return render_template("index.html", title='Муызкальник', form=form, albums=albums,
                            tracks=tracks)
 
 
@@ -95,6 +92,18 @@ def search():
     return render_template('search.html', title='Поиск – Музыкальник', results=albums)
 
 
+@app.route('/profile/<int:user_id>')
+def profile(user_id):
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).filter(User.id == user_id).first()
+    return render_template('profile.html', title='Профиль – Музыкальник', user=user)
+
+
+@app.route('/edit_profile')
+def edit_profile():
+    return 'ABRACADABRA'
+
+
 @app.route('/album_detail/<int:album_id>')
 def album_detail(album_id):
     db_sess = db_session.create_session()
@@ -115,18 +124,24 @@ def track_detail(track_id):
                                    album=[])
 
 
-@app.route("/upload", methods=['GET', 'POST'])
-def upload():
-    form = UploadAlbumForm()
-    if form.validate_on_submit():
-        file = form.cover.data
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+@app.route("/upload/<int:user_id>", methods=['GET', 'POST'])
+@login_required
+def upload(user_id):
+    album_form = UploadAlbumForm()
+    track_form = UploadTrackForm()
 
-        flash("Альбом успешно загружен!", "success")
-        return redirect(url_for('index'))
+    albums = db_session.create_session().query(Album).filter_by(uploaded_from_user_id=current_user.id).all()
+    track_form.album_id.choices = [(0, 'Не относится к альбому')] + [(a.id, a.name) for a in albums]
 
-    return render_template("upload.html", form=form)
+    if album_form.validate_on_submit() and album_form.submit.data:
+        pass
+
+    elif track_form.validate_on_submit() and track_form.submit.data:
+        pass
+
+    return render_template('upload.html', title='Загрузка релиза – Музыкальник',
+                           album_form=album_form,
+                           track_form=track_form)
 
 
 @app.route('/logout')
