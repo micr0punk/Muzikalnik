@@ -53,7 +53,7 @@ def create_user():
 
 
 @blueprint.route('/api/user/<int:user_id>', methods=['DELETE'])
-def delete_news(user_id):
+def delete_user(user_id):
     db_sess = db_session.create_session()
     user = db_sess.query(User).get(user_id)
     if not user:

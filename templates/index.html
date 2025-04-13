@@ -29,7 +29,7 @@
 
     <!-- Альбомы -->
     <div class="tab-pane fade show active" id="albums" role="tabpanel">
-        <form method="GET" action="{{ url_for('search') }}" class="row g-2 mb-4 mt-3">
+        <form method="GET" action="{{ url_for('search_album') }}" class="row g-2 mb-4 mt-3">
             <div class="col-md-6">
                 {{ form.query(class_='form-control', placeholder="Поиск по названию, исполнителю...") }}
             </div>
@@ -51,11 +51,11 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ album.name }}</h5>
                         <p class="card-text">
-                            <strong>Исполнитель:</strong> {{ album.artist }}<br>
+                            <strong>Исполнитель:</strong> {{album.artist}}<br>
                             <strong>Жанр:</strong> {{ album.genre }}<br>
-                            <strong>Длительность:</strong> {{ album.length }}
+                            <strong>Длительность:</strong> {{album.length}}
                         </p>
-                        <a href="{{ url_for('album_detail', album_id=album.id) }}" class="btn btn-outline-secondary">Подробнее</a>
+                        <a href="{{ url_for('album_detail', album_id=album.id) }}" class="btn btn-dark">Подробнее</a>
                     </div>
                 </div>
             </div>
@@ -65,7 +65,7 @@
 
     <!-- Треки -->
     <div class="tab-pane fade" id="tracks" role="tabpanel">
-        <form method="GET" action="{{ url_for('search') }}" class="row g-2 mb-4 mt-3">
+        <form method="GET" action="{{ url_for('search_track') }}" class="row g-2 mb-4 mt-3">
             <div class="col-md-6">
                 {{ form.query(class_='form-control', placeholder="Поиск по названию, исполнителю...") }}
             </div>
@@ -83,23 +83,23 @@
                 <div class="card h-100">
                     <div class="cover-wrapper">
                         {% if track.album_id == 0 %}
-                            <img src="{{ track.cover_url }}" alt="Обложка трека" class="cover-img">
+                        <img src="{{ track.cover_url }}" alt="Обложка трека" class="cover-img">
                         {% else %}
-                            {% for album in albums %}
-                                {% if album.id == track.album_id %}
-                                    <img src="{{ album.cover_url }}" alt="Обложка трека" class="cover-img">
-                                {% endif %}
-                            {% endfor %}
+                        {% for album in albums %}
+                        {% if album.id == track.album_id %}
+                        <img src="{{ album.cover_url }}" alt="Обложка трека" class="cover-img">
+                        {% endif %}
+                        {% endfor %}
                         {% endif %}
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">{{ track.name }}</h5>
                         <p class="card-text">
-                            <strong>Исполнитель:</strong> {{ track.artist }}<br>
+                            <strong>Исполнитель:</strong> {{track.artist}}<br>
                             <strong>Жанр:</strong> {{ track.genre }}<br>
-                            <strong>Длительность:</strong> {{ track.length }}
+                            <strong>Длительность:</strong> {{track.length}}
                         </p>
-                        <a href="{{ url_for('track_detail', track_id=track.id) }}" class="btn btn-outline-secondary">Подробнее</a>
+                        <a href="{{ url_for('track_detail', track_id=track.id) }}" class="btn btn-dark">Подробнее</a>
                     </div>
                 </div>
             </div>

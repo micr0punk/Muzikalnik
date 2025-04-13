@@ -4,87 +4,108 @@
 <h2>Загрузка релиза</h2>
 
 <ul class="nav nav-tabs mb-3" id="uploadTabs" role="tablist">
-  <li class="nav-item" role="presentation">
-    <button class="nav-link active" id="album-tab" data-bs-toggle="tab" data-bs-target="#album" type="button"
-            role="tab" aria-controls="album" aria-selected="true">
-      Добавить альбом
-    </button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button class="nav-link" id="track-tab" data-bs-toggle="tab" data-bs-target="#track" type="button"
-            role="tab" aria-controls="track" aria-selected="false">
-      Добавить трек
-    </button>
-  </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="album-tab" data-bs-toggle="tab" data-bs-target="#album" type="button"
+                role="tab" aria-controls="album" aria-selected="true">
+            Добавить альбом
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="track-tab" data-bs-toggle="tab" data-bs-target="#track" type="button"
+                role="tab" aria-controls="track" aria-selected="false">
+            Добавить трек
+        </button>
+    </li>
 </ul>
 
 <div class="tab-content" id="uploadTabsContent">
-  <!-- Форма для альбома -->
-  <div class="tab-pane fade show active" id="album" role="tabpanel" aria-labelledby="album-tab">
-    <form method="post" enctype="multipart/form-data">
-        {{ album_form.hidden_tag() }}
-        <div class="mb-3">
-            {{ album_form.name.label(class="form-label") }}
-            {{ album_form.name(class="form-control") }}
+    <!-- Форма для альбома -->
+    <div class="tab-pane fade show active" id="album" role="tabpanel" aria-labelledby="album-tab">
+        <div class="alert alert-info" role="alert">
+            ВНИМАНИЕ! Если вы загружаете альбом, то после загрузки информации о нём необходимо будет добавить в него
+            треки через вкладку "Добавить трек". (В строчке "Альбом" необходимо выбрать альбом, который вы только
+            что добавили.)
         </div>
-        <div class="mb-3">
-            {{ album_form.artist.label(class="form-label") }}
-            {{ album_form.artist(class="form-control") }}
-        </div>
-        <div class="mb-3">
-            {{ album_form.genre.label(class="form-label") }}
-            {{ album_form.genre(class="form-control") }}
-        </div>
-        <div class="mb-3">
-            {{ album_form.length.label(class="form-label") }}
-            {{ album_form.length(class="form-control") }}
-        </div>
-        <div class="mb-3">
-            {{ album_form.release_date.label(class="form-label") }}
-            {{ album_form.release_date(class="form-control") }}
-        </div>
-        <div class="mb-3">
-            {{ album_form.cover.label(class="form-label") }}
-            {{ album_form.cover(class="form-control") }}
-        </div>
-        {{ album_form.submit(class="btn btn-primary") }}
-    </form>
-  </div>
+        <form method="post" enctype="multipart/form-data">
+            {{ album_form.hidden_tag() }}
+            <div class="mb-3">
+                {{ album_form.name.label(class="form-label") }}
+                {{ album_form.name(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ album_form.artist.label(class="form-label") }}
+                {{ album_form.artist(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ album_form.genre.label(class="form-label") }}
+                {{ album_form.genre(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ album_form.length.label(class="form-label") }}
+                {{ album_form.length(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ album_form.release_date.label(class="form-label") }}
+                {{ album_form.release_date(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ album_form.cover.label(class="form-label") }}
+                {{ album_form.cover(class="form-control") }}
+            </div>
+            {{ album_form.submit(class="btn btn-primary") }}
+        </form>
+    </div>
 
-  <!-- Форма для трека -->
-  <div class="tab-pane fade" id="track" role="tabpanel" aria-labelledby="track-tab">
-    <form method="post" enctype="multipart/form-data">
-        {{ track_form.hidden_tag() }}
-        <div class="mb-3">
-            {{ track_form.name.label(class="form-label") }}
-            {{ track_form.name(class="form-control") }}
-        </div>
-        <div class="mb-3">
-            {{ track_form.artist.label(class="form-label") }}
-            {{ track_form.artist(class="form-control") }}
-        </div>
-        <div class="mb-3">
-            {{ track_form.genre.label(class="form-label") }}
-            {{ track_form.genre(class="form-control") }}
-        </div>
-        <div class="mb-3">
-            {{ track_form.length.label(class="form-label") }}
-            {{ track_form.length(class="form-control") }}
-        </div>
-        <div class="mb-3">
-            {{ track_form.release_date.label(class="form-label") }}
-            {{ track_form.release_date(class="form-control") }}
-        </div>
-        <div class="mb-3">
-            {{ track_form.cover.label(class="form-label") }}
-            {{ track_form.cover(class="form-control") }}
-        </div>
-        <div class="mb-3">
-            {{ track_form.album_id.label(class="form-label") }}
-            {{ track_form.album_id(class="form-control") }}
-        </div>
-        {{ track_form.submit(class="btn btn-primary") }}
-    </form>
-  </div>
+    <!-- Форма для трека -->
+    <div class="tab-pane fade" id="track" role="tabpanel" aria-labelledby="track-tab">
+        <form method="post" enctype="multipart/form-data">
+            {{ track_form.hidden_tag() }}
+            <div class="mb-3">
+                {{ track_form.name.label(class="form-label") }}
+                {{ track_form.name(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ track_form.artist.label(class="form-label") }}
+                {{ track_form.artist(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ track_form.genre.label(class="form-label") }}
+                {{ track_form.genre(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ track_form.length.label(class="form-label") }}
+                {{ track_form.length(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ track_form.release_date.label(class="form-label") }}
+                {{ track_form.release_date(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ track_form.cover.label(class="form-label") }}
+                {{ track_form.cover(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ track_form.album_id.label(class="form-label") }}
+                <div class="custom-select">
+                    <select id="album_id" name="album_id" class="form-control">
+                        {% for id, name, cover in albums_with_covers %}
+                        <option value="{{ id }}" data-cover="{{ cover }}">
+                            {% if id == 0 %}
+                            <img src="{{ cover }}" alt="no album"> {{ name }}
+                            {% else %}
+                            <img src="{{ cover }}" alt="{{ name }}"> {{ name }}
+                            {% endif %}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="mb-3">
+                {{ track_form.audio_file.label(class="form-label") }}
+                {{ track_form.audio_file(class="form-control") }}
+            </div>
+            {{ track_form.submit(class="btn btn-primary") }}
+        </form>
+    </div>
 </div>
 {% endblock %}

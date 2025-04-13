@@ -8,13 +8,28 @@
     </div>
     <div class="col-md-8">
         <h1 class="lh-lg"><strong>Альбом:</strong> {{ album.name }}</h1>
-        <p><strong>Исполнитель:</strong> {{ album.artist }}</p>
+        <p><strong>Исполнитель:</strong> {{album.artist}}</p>
         <p><strong>Жанр:</strong> {{ album.genre }}</p>
-        <p><strong>Длительность:</strong> {{ album.length }}</p>
+        <p><strong>Длительность:</strong> {{album.length}}</p>
         <p><strong>Дата выхода:</strong> {{ album.release_date.strftime('%d.%m.%Y') }}</p>
+
         {% if current_user.is_authenticated %}
-        <a href="#" class="btn btn-success">Скачать</a>
+        <!-- Выпадающий список треков -->
+        <h4><strong>Треки:</strong></h4>
+        {% if album.tracks %}
+        <div class="list-group">
+            {% for track in album.tracks %}
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+                {{ track.name }} - {{track.length}}
+                <a href="{{ url_for('track_detail', track_id=track.id) }}" class="btn btn-primary btn-sm">Подробнее</a>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <h5>Для альбома пока не добавили треки. Вы можете сделать это самостоятельно через меню "Добавить релиз"</h5>
+        {% endif %}
         {% endif %}
     </div>
 </div>
+
 {% endblock %}

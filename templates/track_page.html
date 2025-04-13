@@ -17,7 +17,16 @@
         <p><strong>Длительность:</strong> {{ track.length }}</p>
         <p><strong>Дата выхода:</strong> {{ track.release_date.strftime('%d.%m.%Y') }}</p>
         {% if current_user.is_authenticated %}
-        <a href="#" class="btn btn-success">Скачать</a>
+        <div class="card shadow mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Прослушать трек</h5>
+                <audio controls class="w-100">
+                    <source src="{{ url_for('listen', track_id=track.id) }}" type="audio/mpeg">
+                    Ваш браузер не поддерживает аудиоплеер.
+                </audio>
+            </div>
+        </div>
+        <a href="{{ url_for('download', track_id=track.id) }}" class="btn btn-success mb-3">Скачать</a>
         {% endif %}
     </div>
 </div>

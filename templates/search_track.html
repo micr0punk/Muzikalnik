@@ -1,0 +1,48 @@
+{% extends "base_unite.html" %}
+
+{% block content %}
+<h2>Поиск</h2>
+<form method="GET" action="{{ url_for('search_track') }}" class="row g-2 mb-4 mt-3">
+    <div class="col-md-6">
+        {{ form.query(class_='form-control', placeholder="Поиск по названию, исполнителю...") }}
+    </div>
+    <div class="col-md-3">
+        {{ form.genre(class_='form-select') }}
+    </div>
+    <div class="col-md-3">
+        <button type="submit" class="btn btn-success w-100">Найти</button>
+    </div>
+</form>
+
+{% if results %}
+<h4>Результаты:</h4>
+<div class="row">
+    {% for track in results %}
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            {% if track.album_id == 0 %}
+            <img src="{{ track.cover_url }}" alt="Обложка трека" class="cover-img">
+            {% else %}
+            {% for album in albums %}
+            {% if album.id == track.album_id %}
+            <img src="{{ album.cover_url }}" alt="Обложка трека" class="cover-img">
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ track.name }}</h5>
+                <p class="card-text">
+                    <strong>Исполнитель:</strong> {{track.artist}}<br>
+                    <strong>Жанр:</strong> {{ track.genre }}<br>
+                    <strong>Длительность:</strong> {{track.length}}
+                </p>
+                <a href="{{ url_for('track_detail', track_id=track.id) }}" class="btn btn-dark">Подробнее</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% elif request.args.q %}
+<p class="text-muted">Ничего не найдено.</p>
+{% endif %}
+{% endblock %}
