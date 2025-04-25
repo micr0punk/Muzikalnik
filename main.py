@@ -1,8 +1,8 @@
 import os
 
 import requests
-from flask import Flask, render_template, flash, redirect, url_for, make_response, jsonify, abort, send_file
-from flask_login import login_user, LoginManager, login_required, logout_user
+from flask import Flask, render_template, flash, redirect, url_for, make_response, jsonify, abort, send_file, request
+from flask_login import login_user, LoginManager, logout_user, login_required
 from flask_restful import Api
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
@@ -108,23 +108,65 @@ def index():
                            tracks=tracks)
 
 
-@app.route('/search_album')
+@app.route('/search_album', methods=['GET'])
 def search_album():
     form = SearchForm()
     db_sess = db_session.create_session()
 
-    albums = db_sess.query(Album).all()
+    query = request.args.get('query', '')
+    genre = request.args.get('genre', '')
+    print(f"Received query: '{query}', genre: '{genre}'")
+    filters = []
+
+    if genre and genre !='':
+        filters.append(Album.genre.ilike(f'%{genre.lower()}%'))
+    if query:
+        filters.append(Album.name.ilike(f'%{query.lower()}%'))
+        filters.append(Album.artist.ilike(f'%{query.lower()}%'))
+
+    if len(filters) == 1:
+        albums = db_sess.query(Album).filter(*filters).all()
+    elif len(filters) == 2:
+        albums = db_sess.query(Album).filter(filters[0] | filters[1]).all()
+    elif len(filters) == 3:
+        albums = db_sess.query(Album).filter(filters[0], filters[1] | filters[2]).all()
+    else:
+        albums = db_sess.query(Album).all()
+
+    form.query.data = query
+    form.genre.data = genre
 
     return render_template('search_album.html', title='Поиск – Музыкальник', form=form, results=albums)
 
 
-@app.route('/search_track')
+@app.route('/search_track', methods=['GET'])
 def search_track():
     form = SearchForm()
     db_sess = db_session.create_session()
 
+    query = request.args.get('query', '')
+    genre = request.args.get('genre', '')
     albums = db_sess.query(Album).all()
-    tracks = db_sess.query(Track).all()
+    print(f"Received query: '{query}', genre: '{genre}'")
+    filters = []
+
+    if genre and genre !='':
+        filters.append(Track.genre.ilike(f'%{genre.lower()}%'))
+    if query:
+        filters.append(Track.name.ilike(f'%{query.lower()}%'))
+        filters.append(Track.artist.ilike(f'%{query.lower()}%'))
+
+    if len(filters) == 1:
+        tracks = db_sess.query(Track).filter(*filters).all()
+    elif len(filters) == 2:
+        tracks = db_sess.query(Track).filter(filters[0] | filters[1]).all()
+    elif len(filters) == 3:
+        tracks = db_sess.query(Track).filter(filters[0], filters[1] | filters[2]).all()
+    else:
+        tracks = db_sess.query(Track).all()
+
+    form.query.data = query
+    form.genre.data = genre
 
     return render_template('search_track.html', title='Поиск – Музыкальник', form=form, results=tracks, albums=albums)
 

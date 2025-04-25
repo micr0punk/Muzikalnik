@@ -34,7 +34,7 @@
     </div>
     {% endfor %}
 </div>
-{% elif request.args.q %}
+{% else %}
 <p class="text-muted">Ничего не найдено.</p>
 {% endif %}
 {% endblock %}

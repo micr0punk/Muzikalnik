@@ -8,7 +8,7 @@ class UploadAlbumForm(FlaskForm):
     form_name = HiddenField(default='album')
     name = StringField("Название альбома")
     artist = StringField("Исполнитель")
-    genre = StringField("Жанр/ы (Через запятую)")
+    genre = StringField("Жанр(ы) (Через запятую)")
     length = StringField("Длительность")
     release_date = DateField("Дата релиза", format='%Y-%m-%d')
     cover = FileField("Обложка", validators=[
@@ -24,7 +24,7 @@ class UploadTrackForm(FlaskForm):
     form_name = HiddenField(default='track')
     name = StringField("Название трека")
     artist = StringField("Исполнитель")
-    genre = StringField("Жанр/ы (Через запятую)")
+    genre = StringField("Жанр(ы) (Через запятую)")
     length = StringField("Длительность")
     release_date = DateField("Дата релиза", format='%Y-%m-%d')
     album_id = SelectField("Альбом (необязательно)", coerce=int, choices=[])
