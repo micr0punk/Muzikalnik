@@ -4,10 +4,10 @@
 <div class="container mt-4">
     <div class="card shadow rounded">
         <div class="card-body">
-            <h2 class="card-title mb-4">Профиль пользователя {{ user.name }}</h2>
+            <h2 class="card-title mb-4">Профиль пользователя {{user.name}}</h2>
 
-            <p><strong>Почта:</strong> {{ user.email }}</p>
-            <p><strong>О себе:</strong> {{ user.about or "Пока пусто..." }}</p>
+            <p><strong>Почта:</strong> {{user.email}}</p>
+            <p><strong>О себе:</strong> {{user.about or "Пока пусто..." }}</p>
             <p><strong>Дата регистрации:</strong> {{ user.created_date.strftime('%d.%m.%Y') }}</p>
 
             <hr>

@@ -19,7 +19,6 @@
 </ul>
 
 <div class="tab-content" id="uploadTabsContent">
-    <!-- Форма для альбома -->
     <div class="tab-pane fade show active" id="album" role="tabpanel" aria-labelledby="album-tab">
         <div class="alert alert-info" role="alert">
             ВНИМАНИЕ! Если вы загружаете альбом, то после загрузки информации о нём необходимо будет добавить в него
@@ -56,7 +55,6 @@
         </form>
     </div>
 
-    <!-- Форма для трека -->
     <div class="tab-pane fade" id="track" role="tabpanel" aria-labelledby="track-tab">
         <form method="post" enctype="multipart/form-data">
             {{ track_form.hidden_tag() }}
