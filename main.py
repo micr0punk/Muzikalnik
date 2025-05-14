@@ -1,12 +1,10 @@
 import os
-
 import requests
 from flask import Flask, render_template, flash, redirect, url_for, make_response, jsonify, abort, send_file, request
 from flask_login import login_user, LoginManager, logout_user, login_required
 from flask_restful import Api
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
-
 import album_resources
 import track_resources
 import user_resources

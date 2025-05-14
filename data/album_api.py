@@ -21,7 +21,7 @@ def get_one_album(album_id):
         return make_response(jsonify({'error': 'Not found'}), 404)
     return jsonify(
         {
-            'album': album.to_dict()
+            'album': album.to_dict(only=('id', 'name', 'artist', 'genre', 'release_date'))
         }
     )
 
